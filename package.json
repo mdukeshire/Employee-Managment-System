@@ -1,0 +1,25 @@
+{
+  "name": "Employee-Managment-System",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdukeshire/Employee-Managment-System.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mdukeshire/Employee-Managment-System/issues"
+  },
+  "homepage": "https://github.com/mdukeshire/Employee-Managment-System#readme",
+  "dependencies": {
+    "inquirer": "^8.2.0",
+    "mysql2": "^2.3.3-rc.0"
+  },
+  "devDependencies": {}
+}
