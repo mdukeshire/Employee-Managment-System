@@ -3,18 +3,22 @@ const mysql = require('mysql2');
 
 require('dotenv').config();
 
+ process.on('unhandledRejection',(reason, p)=>{
+     console.log('unhandledRejection is here:',p,'this is the reason:',reason);
+})
+
 const db = mysql.createConnection(
     {
       host: 'localhost',
       user:process.env.DB_USER,
       password: process.env.DB_PASS,
-      database: process.env.DB_HOST,
-      port: 3306
+      database: process.env.DB_NAME,
+     
     },
     console.log(`company_db connected`)
 );
 
-db.connect(err => {
+db.connect((err) => {
     if(err) throw err;
     console.log('connected');
     menu()
@@ -31,19 +35,27 @@ inquirer
         },
     ])
     .then((answers) => {
-        if(answers.init === 'Add Employee') {
+        let answer = answers.init 
+        switch(answer){
+            case 'Add Employee':
             addEmployee();
-        }else if (answers.init === 'View All Departments') {
-            viewDept();
-        }else if(answers.init === 'Add Department') {
-            addDept();
-        }else if (answers.init === 'Add Role') {
+            break;
+            case 'View All Departments':
+             viewDept();
+            break;
+            case 'Add Department':
+             addDept();
+             break;
+            case 'Add Role':
             addRole();
-        }else if(answers.init === 'View All Employees') {
-            viewEmplyees();
-        }else if(answers.init === 'View All Roles') {
+            break;
+            case 'View All Employees':
+            viewEmployees();
+            break;
+            case 'View All Roles':
             viewRoles();
-        }else {
+            break;
+            default:
             finish();
         }
     })
@@ -73,14 +85,11 @@ function addEmployee() {
     },
     ])
     .then((answers) => {
-        // console.log(answers);
         let query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${answers.firstName}', '${answers.lastName}', '${answers.role}', '${answers.manager}');`;
         db.promise().query(query).then(function(err, res){
             if(err){
-                // console.error(err);
             }
-            // console.log(res);
-            console.log('Employee Added');
+            console.log('New Employee');
             menu();
         });
 
@@ -105,10 +114,8 @@ function viewDept() {
          let query = `INSERT INTO department (name) VALUES ('${answers.newDept}')`;
          db.promise().query(query).then(function(err, res){
             if(err){
-                // console.error(err);
             }
-            // console.log(res);
-            console.log('Department Added');
+            console.log('New Department');
             menu();
         });
      }) 
@@ -137,19 +144,19 @@ function viewDept() {
          db.promise().query(query).then(function(err, res){
             if(err){
             }
-            console.log('Role Added');
+            console.log('New Role');
             menu();
         });
      }) 
  }
  
- function viewEmplyees() {
-     db.query('SELECT * FROM employee', (err, data) => {
-         if(err) throw err;
-         console.table(data);
-         menu();
-   })
- }
+ function viewEmployees() {
+     db.query('SELECT * FROM employee')
+     if(err) throw err;
+        console.table(data);
+        menu();
+     }
+ 
 
  function viewRoles() {
     db.query('SELECT * FROM roles', (err, data) => {
